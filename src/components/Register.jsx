@@ -1,0 +1,49 @@
+import React from "react";
+import { Link } from "react-router-dom";
+
+const Register = () => {
+  return (
+    <div className="register">
+      <h1 className="register__title">Регистрация</h1>
+      <form className="register__form">
+        <input
+          className="register__input"
+          // id="profile-name"
+          type="email"
+          placeholder="Email"
+          required
+          name="email"
+          minLength="2"
+          maxLength="40"
+          // value={}
+          // onChange={}
+        />
+        <span className="register__error-message"></span>
+        <input
+          className="register__input"
+          // id="profile-job"
+          type="password"
+          placeholder="Пароль"
+          required
+          name="password"
+          minLength="2"
+          maxLength="200"
+          // value={}
+          // onChange={}
+        />
+        <span className="register__error-message"></span>
+        <button className="register__save-btn" type="submit">
+          Зарегистрироваться
+        </button>
+      </form>
+      <div className="register__signin">
+        <p>Уже зарегистрированы?</p>
+        <Link to="/sign-in" className="register__login-link">
+          Войти
+        </Link>
+      </div>
+    </div>
+  );
+};
+
+export default Register;

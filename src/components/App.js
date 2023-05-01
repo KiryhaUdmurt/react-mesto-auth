@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
@@ -8,7 +9,9 @@ import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
-
+import ProtectedRouteElement from "./ProtectedRoute";
+import Login from "./Login";
+import Register from "./Register";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -129,19 +132,34 @@ function App() {
       .catch((err) => console.log(err));
   }
 
+  // --------------------AUTHENTIFICATION---------------------------
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header />
-        <Main
-          onEditAvatar={handleEditAvatarClick}
-          onEditProfile={handleEditProfileClick}
-          onAddPlace={handleAddPlaceClick}
-          onCardClick={handleCardClick}
-          onCardLike={handleCardLike}
-          onCardDelete={handleDeleteCard}
-          cards={cards}
-        />
+        <Header isLoggedIn={isLoggedIn}/>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <ProtectedRouteElement
+                element={Main}
+                isLoggedIn={isLoggedIn}
+                onEditAvatar={handleEditAvatarClick}
+                onEditProfile={handleEditProfileClick}
+                onAddPlace={handleAddPlaceClick}
+                onCardClick={handleCardClick}
+                onCardLike={handleCardLike}
+                onCardDelete={handleDeleteCard}
+                cards={cards}
+              />
+            }
+          />
+          <Route path="/sign-up" element={<Register />} />
+          <Route path="/sign-in" element={<Login />} />
+        </Routes>
         <Footer />
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
@@ -158,7 +176,11 @@ function App() {
           onClose={closeAllPopups}
           onUpdateAvatar={handleUpdateAvatar}
         />
-        <ImagePopup card={selectedCard} onClose={closeAllPopups} isOpen={selectedCard} />
+        <ImagePopup
+          card={selectedCard}
+          onClose={closeAllPopups}
+          isOpen={selectedCard}
+        />
       </div>
     </CurrentUserContext.Provider>
   );
