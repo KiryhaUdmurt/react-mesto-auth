@@ -12,6 +12,7 @@ import AddPlacePopup from "./AddPlacePopup";
 import ProtectedRouteElement from "./ProtectedRoute";
 import Login from "./Login";
 import Register from "./Register";
+import InfoTooltip from "./InfoTooltip";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -134,7 +135,7 @@ function App() {
 
   // --------------------AUTHENTIFICATION---------------------------
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -181,6 +182,7 @@ function App() {
           onClose={closeAllPopups}
           isOpen={selectedCard}
         />
+        <InfoTooltip />
       </div>
     </CurrentUserContext.Provider>
   );
