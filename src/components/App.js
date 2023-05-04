@@ -19,6 +19,7 @@ function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [isAuthInfoPopupOpen, setIsAuthInfoPopupOpen] = useState(false);
 
   const [selectedCard, setSelectedCard] = useState(null);
 
@@ -40,6 +41,7 @@ function App() {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
     setSelectedCard(null);
+    setIsAuthInfoPopupOpen(false);
   }
 
   function handleCardClick(card) {
@@ -56,6 +58,10 @@ function App() {
 
   function handleAddPlaceClick() {
     setIsAddPlacePopupOpen(true);
+  }
+
+  function handleInfoPopupClick() {
+    setIsAuthInfoPopupOpen(true);
   }
 
   // ЛАЙК И ДИЗЛАЙК
@@ -138,22 +144,29 @@ function App() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [token, setToken] = useState("");
-  const [userData, setUserData] = useState({
-    email: ''
-  });
+  const [userData, setUserData] = useState("");
+  const [isSignUpSuccess, setIsSignUpSuccess] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    setToken(token)
+  }, []);
 
   useEffect(() => {
     if (!token) {
       return;
     }
 
-    auth.getContent(token).then((user) => {
-      setUserData(user);
-      setIsLoggedIn(true);
-      navigate("/", {replace: true});
-    })
-  }, [token, navigate])
+    auth
+      .getContent(token)
+      .then((user) => {
+        setUserData(user.data.email);
+        setIsLoggedIn(true);
+        navigate("/", { replace: true });
+      })
+      .catch((err) => console.log(err));
+  }, [token, navigate]);
 
   const registerUser = ({ email, password }) => {
     auth
@@ -167,20 +180,29 @@ function App() {
   };
 
   const authorizeUser = ({ email, password }) => {
-    auth.authorize(email, password).then((res) => {
-      console.log(res)
-      localStorage.setItem("token", res.token);
-      setToken(res.token);
-      setIsLoggedIn(true);
-      navigate("/", {replace: true})
-    })
-    .catch((err) => console.log(err));
+    auth
+      .authorize(email, password)
+      .then((res) => {
+        console.log(res);
+        localStorage.setItem("token", res.token);
+        setToken(res.token);
+        setIsLoggedIn(true);
+        navigate("/", { replace: true });
+      })
+      .catch((err) => console.log(err));
   };
+
+  const logOut = () => {
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    setToken("");
+    setUserData("")
+  }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header isLoggedIn={isLoggedIn} />
+        <Header isLoggedIn={isLoggedIn} onLogout={logOut} userData={userData}/>
         <Routes>
           <Route
             path="/"
@@ -200,11 +222,14 @@ function App() {
           />
           <Route
             path="/sign-up"
-            element={<Register registerUser={registerUser} />}
+            element={<Register registerUser={registerUser} onInfoClick={handleInfoPopupClick}/>}
           />
-          <Route path="/sign-in" element={<Login authorizeUser={authorizeUser}/>} />
+          <Route
+            path="/sign-in"
+            element={<Login authorizeUser={authorizeUser} />}
+          />
         </Routes>
-        <Footer />
+        <Footer isLoggedIn={isLoggedIn}/>
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
@@ -225,7 +250,7 @@ function App() {
           onClose={closeAllPopups}
           isOpen={selectedCard}
         />
-        <InfoTooltip />
+        <InfoTooltip isLoggedIn={isLoggedIn} onClose={closeAllPopups} isOpen={isAuthInfoPopupOpen}/>
       </div>
     </CurrentUserContext.Provider>
   );

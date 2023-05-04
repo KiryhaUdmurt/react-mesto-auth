@@ -1,9 +1,10 @@
 
-export default function Footer() {
+export default function Footer({isLoggedIn}) {
   const currentYear = new Date();
   return (
-    <footer className="footer">
+    isLoggedIn &&
+    (<footer className="footer">
       <p className="footer__copyright">© {currentYear.getFullYear()} Калинин Кирилл</p>
-    </footer>
+    </footer>)
   );
 }

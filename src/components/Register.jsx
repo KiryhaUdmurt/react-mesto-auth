@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 
-const Register = ({registerUser}) => {
+const Register = ({registerUser, onInfoClick}) => {
   const [formValue, setFormValue] = useState({
     email: "",
     password: "",
@@ -19,13 +19,7 @@ const Register = ({registerUser}) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formValue);
-
     registerUser(formValue);
-    // auth.register(email, password).then((res) => {
-    //   console.log(res)
-    //   navigate("/sign-in", { replace: true });
-    // });
   };
 
   return (
@@ -34,7 +28,6 @@ const Register = ({registerUser}) => {
       <form className="register__form" onSubmit={handleSubmit}>
         <input
           className="register__input"
-          // id="profile-name"
           type="email"
           placeholder="Email"
           required
@@ -47,7 +40,6 @@ const Register = ({registerUser}) => {
         <span className="register__error-message"></span>
         <input
           className="register__input"
-          // id="profile-job"
           type="password"
           placeholder="Пароль"
           required
@@ -58,7 +50,7 @@ const Register = ({registerUser}) => {
           onChange={handleChange}
         />
         <span className="register__error-message"></span>
-        <button className="register__save-btn" type="submit">
+        <button className="register__save-btn" type="submit" onClick={onInfoClick}>
           Зарегистрироваться
         </button>
       </form>
