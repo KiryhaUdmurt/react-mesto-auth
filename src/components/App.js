@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
@@ -13,6 +13,7 @@ import ProtectedRouteElement from "./ProtectedRoute";
 import Login from "./Login";
 import Register from "./Register";
 import InfoTooltip from "./InfoTooltip";
+import * as auth from "../utils/auth";
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -135,12 +136,51 @@ function App() {
 
   // --------------------AUTHENTIFICATION---------------------------
 
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [token, setToken] = useState("");
+  const [userData, setUserData] = useState({
+    email: ''
+  });
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!token) {
+      return;
+    }
+
+    auth.getContent(token).then((user) => {
+      setUserData(user);
+      setIsLoggedIn(true);
+      navigate("/", {replace: true});
+    })
+  }, [token, navigate])
+
+  const registerUser = ({ email, password }) => {
+    auth
+      .register(email, password)
+      .then((res) => {
+        console.log(res);
+        navigate("/sign-in", { replace: true });
+      })
+      .catch((err) => console.log(err));
+    // ВЫВОД ОШИБОК В ПОПАП ДОБАВИТЬ
+  };
+
+  const authorizeUser = ({ email, password }) => {
+    auth.authorize(email, password).then((res) => {
+      console.log(res)
+      localStorage.setItem("token", res.token);
+      setToken(res.token);
+      setIsLoggedIn(true);
+      navigate("/", {replace: true})
+    })
+    .catch((err) => console.log(err));
+  };
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header isLoggedIn={isLoggedIn}/>
+        <Header isLoggedIn={isLoggedIn} />
         <Routes>
           <Route
             path="/"
@@ -158,8 +198,11 @@ function App() {
               />
             }
           />
-          <Route path="/sign-up" element={<Register />} />
-          <Route path="/sign-in" element={<Login />} />
+          <Route
+            path="/sign-up"
+            element={<Register registerUser={registerUser} />}
+          />
+          <Route path="/sign-in" element={<Login authorizeUser={authorizeUser}/>} />
         </Routes>
         <Footer />
         <EditProfilePopup
