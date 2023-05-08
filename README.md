@@ -39,4 +39,4 @@ __JavaScript:__
 1. Дальнейшая реализация проекта на React.
 
 **GH Pages**
-Ссылка на страницу - https://kiryhaudmurt.github.io/mesto-react/
+Ссылка на страницу - https://kiryhaudmurt.github.io/react-mesto-auth/
