@@ -1,13 +1,22 @@
 export const BASE_URL = "https://auth.nomoreparties.co";
 
-export const register = (email, password) => {
-  return fetch(`${BASE_URL}/signup`, {
-    method: "POST",
+const makeRequest = (url, method, body, token) => {
+  const options = {
+    method,
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ email, password }),
-  })
+  };
+
+  if (body) {
+    options.body = JSON.stringify(body);
+  }
+
+  if (token) {
+    options.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return fetch(`${BASE_URL}${url}`, options)
     .then((response) => {
       if (response.ok) {
         return response.json();
@@ -17,42 +26,16 @@ export const register = (email, password) => {
       return res;
     })
     .catch((err) => console.log(err));
+};
+
+export const register = (email, password) => {
+  return makeRequest("/signup", "POST", { email, password });
 };
 
 export const authorize = (email, password) => {
-  return fetch(`${BASE_URL}/signin`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ email, password }),
-  })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-    })
-    .then((res) => {
-      return res;
-    })
-    .catch((err) => console.log(err));
+  return makeRequest("/signin", "POST", { email, password });
 };
 
 export const getContent = (token) => {
-  return fetch(`${BASE_URL}/users/me`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-    })
-    .then((res) => {
-      return res;
-    })
-    .catch((err) => console.log(err));
+  return makeRequest("/users/me", "GET", null, token);
 };

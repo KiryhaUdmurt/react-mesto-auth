@@ -2,7 +2,7 @@ import React from "react";
 import successPin from "../images/success-logo.svg";
 import errorPin from "../images/errror-logo.svg";
 
-const InfoTooltip = ({ isLoggedIn, isOpen, onClose }) => {
+const InfoTooltip = ({ isRegistered, isOpen, onClose }) => {
   function closeEsc(e) {
     if (e.key === "Escape") {
       onClose();
@@ -20,11 +20,11 @@ const InfoTooltip = ({ isLoggedIn, isOpen, onClose }) => {
       <div className="popup__container">
         <img
           className="popup__info-img"
-          src={isLoggedIn ? successPin : errorPin}
+          src={isRegistered ? successPin : errorPin}
           alt="Успешно"
         />
         <p className="popup__text">
-          {isLoggedIn
+          {isRegistered
             ? "Вы успешно зарегистрировались!"
             : "Что-то пошло не так! Попробуйте ещё раз."}
         </p>

@@ -142,15 +142,18 @@ function App() {
 
   // --------------------AUTHENTIFICATION---------------------------
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [token, setToken] = useState("");
   const [userData, setUserData] = useState("");
-  const [isSignUpSuccess, setIsSignUpSuccess] = useState(false);
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    setToken(token)
+    const token = localStorage.getItem("token");
+    setToken(token);
+    setIsLoggedIn(false);
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {
@@ -165,7 +168,8 @@ function App() {
         setIsLoggedIn(true);
         navigate("/", { replace: true });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err))
+      .finally(() => setIsLoading(false));
   }, [token, navigate]);
 
   const registerUser = ({ email, password }) => {
@@ -173,10 +177,10 @@ function App() {
       .register(email, password)
       .then((res) => {
         console.log(res);
+        setIsRegistered(true);
         navigate("/sign-in", { replace: true });
       })
       .catch((err) => console.log(err));
-    // ВЫВОД ОШИБОК В ПОПАП ДОБАВИТЬ
   };
 
   const authorizeUser = ({ email, password }) => {
@@ -193,16 +197,20 @@ function App() {
   };
 
   const logOut = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem("token");
     setIsLoggedIn(false);
     setToken("");
-    setUserData("")
+    setUserData("");
+  };
+
+  if (isLoading) {
+    return <div>...</div>;
   }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="page">
-        <Header isLoggedIn={isLoggedIn} onLogout={logOut} userData={userData}/>
+        <Header isLoggedIn={isLoggedIn} onLogout={logOut} userData={userData} />
         <Routes>
           <Route
             path="/"
@@ -222,14 +230,19 @@ function App() {
           />
           <Route
             path="/sign-up"
-            element={<Register registerUser={registerUser} onInfoClick={handleInfoPopupClick}/>}
+            element={
+              <Register
+                registerUser={registerUser}
+                onInfoClick={handleInfoPopupClick}
+              />
+            }
           />
           <Route
             path="/sign-in"
             element={<Login authorizeUser={authorizeUser} />}
           />
         </Routes>
-        <Footer isLoggedIn={isLoggedIn}/>
+        <Footer isLoggedIn={isLoggedIn} />
         <EditProfilePopup
           isOpen={isEditProfilePopupOpen}
           onClose={closeAllPopups}
@@ -250,7 +263,11 @@ function App() {
           onClose={closeAllPopups}
           isOpen={selectedCard}
         />
-        <InfoTooltip isLoggedIn={isLoggedIn} onClose={closeAllPopups} isOpen={isAuthInfoPopupOpen}/>
+        <InfoTooltip
+          isRegistered={isRegistered}
+          onClose={closeAllPopups}
+          isOpen={isAuthInfoPopupOpen}
+        />
       </div>
     </CurrentUserContext.Provider>
   );
