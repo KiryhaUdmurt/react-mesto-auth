@@ -16,16 +16,16 @@ import InfoTooltip from "./InfoTooltip";
 import * as auth from "../utils/auth";
 
 function App() {
+  // CARD/USER/POPUP STATES
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isAuthInfoPopupOpen, setIsAuthInfoPopupOpen] = useState(false);
-
   const [selectedCard, setSelectedCard] = useState(null);
-
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
 
+  // INITIAL RENDER
   useEffect(() => {
     Promise.all([api.getUserInformation(), api.getInitialCards()])
       .then(([userInfo, initialCards]) => {
@@ -35,7 +35,7 @@ function App() {
       .catch((err) => console.log(err));
   }, []);
 
-  // ЗАКРЫТИЕ ПОПАПОВ
+  // POPUPS OPEN/CLOSE
   function closeAllPopups() {
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
@@ -64,11 +64,10 @@ function App() {
     setIsAuthInfoPopupOpen(true);
   }
 
-  // ЛАЙК И ДИЗЛАЙК
+  // LIKE/DISLIKE
   function handleCardLike(card) {
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
-    // Отправляем запрос в API и получаем обновлённые данные карточки
     isLiked
       ? api
           .deleteLike(card._id)
@@ -88,7 +87,7 @@ function App() {
           .catch((err) => console.log(err));
   }
 
-  // УДАЛЕНИЕ КАРТОЧКИ
+  // CARD DELETE
   function handleDeleteCard(card) {
     const isOwnCard = card.owner._id === currentUser._id;
 
@@ -106,7 +105,7 @@ function App() {
     }
   }
 
-  // ДОБАВЛЕНИЕ КАРТОЧКИ
+  // CARD ADD
   function handleAddPlaceSubmit(data) {
     api
       .addCard(data)
@@ -117,7 +116,7 @@ function App() {
       .catch((err) => console.log(err));
   }
 
-  // СМЕНА ДАННЫХ ПРОФИЛЯ
+  // PROFILE DATA CHANGE
   function handleUpdateUser(data) {
     api
       .changeProfileInfo(data)
@@ -128,7 +127,7 @@ function App() {
       .catch((err) => console.log(err));
   }
 
-  // СМЕНА АВАТАРА
+  // AVATAR CHANGE
   function handleUpdateAvatar(data) {
     api
       .changeAvatar(data)
@@ -140,8 +139,7 @@ function App() {
       .catch((err) => console.log(err));
   }
 
-  // --------------------AUTHENTIFICATION---------------------------
-
+  // AUTH STATES
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [token, setToken] = useState("");
   const [userData, setUserData] = useState("");
@@ -149,6 +147,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
+  // AUTOLOGIN
   useEffect(() => {
     const token = localStorage.getItem("token");
     setToken(token);
@@ -172,6 +171,7 @@ function App() {
       .finally(() => setIsLoading(false));
   }, [token, navigate]);
 
+  // SIGNUP
   const registerUser = ({ email, password }) => {
     auth
       .register(email, password)
@@ -183,6 +183,7 @@ function App() {
       .catch((err) => console.log(err));
   };
 
+  // SIGNIN
   const authorizeUser = ({ email, password }) => {
     auth
       .authorize(email, password)
@@ -196,6 +197,7 @@ function App() {
       .catch((err) => console.log(err));
   };
 
+  // SIGNOUT
   const logOut = () => {
     localStorage.removeItem("token");
     setIsLoggedIn(false);
@@ -203,6 +205,7 @@ function App() {
     setUserData("");
   };
 
+  // LOADING
   if (isLoading) {
     return <div>...</div>;
   }
