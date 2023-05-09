@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import useForm from "../hooks/useForm";
+import useForm from "../hooks/useFormAndValidation";
 import useFormAndValidation from "../hooks/useFormAndValidation";
 
 const Register = ({ registerUser, onInfoClick }) => {
