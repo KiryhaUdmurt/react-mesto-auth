@@ -1,25 +1,31 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import useForm from "../hooks/useForm";
 
 
 const Register = ({registerUser, onInfoClick}) => {
-  const [formValue, setFormValue] = useState({
+  // const [formValue, setFormValue] = useState({
+  //   email: "",
+  //   password: "",
+  // });
+
+  const {values, handleChange} = useForm({
     email: "",
     password: "",
-  });
+  })
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
 
-    setFormValue({
-      ...formValue,
-      [name]: value,
-    });
-  };
+  //   setFormValue({
+  //     ...formValue,
+  //     [name]: value,
+  //   });
+  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    registerUser(formValue);
+    registerUser(values);
   };
 
   return (
@@ -34,7 +40,7 @@ const Register = ({registerUser, onInfoClick}) => {
           name="email"
           minLength="2"
           maxLength="40"
-          value={formValue.email}
+          value={values.email}
           onChange={handleChange}
         />
         <span className="register__error-message"></span>
@@ -46,7 +52,7 @@ const Register = ({registerUser, onInfoClick}) => {
           name="password"
           minLength="2"
           maxLength="200"
-          value={formValue.password}
+          value={values.password}
           onChange={handleChange}
         />
         <span className="register__error-message"></span>

@@ -1,5 +1,12 @@
 export const BASE_URL = "https://auth.nomoreparties.co";
 
+const checkResponse = (res) => {
+  if (res.ok) {
+    return res.json();
+  }
+  return Promise.reject(`Ошибка ${res.status}`);
+};
+
 const makeRequest = (url, method, body, token) => {
   const options = {
     method,
@@ -16,16 +23,7 @@ const makeRequest = (url, method, body, token) => {
     options.headers.Authorization = `Bearer ${token}`;
   }
 
-  return fetch(`${BASE_URL}${url}`, options)
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      }
-    })
-    .then((res) => {
-      return res;
-    })
-    .catch((err) => console.log(err));
+  return fetch(`${BASE_URL}${url}`, options).then(checkResponse);
 };
 
 export const register = (email, password) => {

@@ -1,23 +1,29 @@
 import React, { useState } from "react";
+import useForm from "../hooks/useForm";
 
 const Login = ({authorizeUser}) => {
-  const [formValue, setFormValue] = useState({
+  const {values, handleChange} = useForm({
     email: "",
     password: "",
-  });
+  })
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  // const [formValue, setFormValue] = useState({
+  //   email: "",
+  //   password: "",
+  // });
 
-    setFormValue({
-      ...formValue,
-      [name]: value,
-    });
-  };
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+
+  //   setFormValue({
+  //     ...formValue,
+  //     [name]: value,
+  //   });
+  // };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    authorizeUser(formValue);
+    authorizeUser(values);
   };
 
   return (
@@ -32,7 +38,7 @@ const Login = ({authorizeUser}) => {
           name="email"
           minLength="2"
           maxLength="40"
-          value={formValue.email}
+          value={values.email}
           onChange={handleChange}
         />
         <span className="login__error-message"></span>
@@ -43,7 +49,7 @@ const Login = ({authorizeUser}) => {
           required
           name="password"
           minLength="2"
-          value={formValue.password}
+          value={values.password}
           onChange={handleChange}
         />
         <span className="login__error-message"></span>
