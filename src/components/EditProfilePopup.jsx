@@ -1,12 +1,12 @@
 import React, { useContext, useEffect } from "react";
 import PopupWithForm from "./PopupWithForm";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
-import useForm from "../hooks/useForm";
+import useFormAndValidation from "../hooks/useForm";
 
 export default function EditProfilePopup(props) {
   const currentUser = useContext(CurrentUserContext);
 
-  const { values, handleChange, setValues } = useForm({
+  const { values, handleChange, setValues, errors } = useFormAndValidation({
     name: currentUser.name,
     about: currentUser.about,
   });
@@ -48,7 +48,7 @@ export default function EditProfilePopup(props) {
         value={values.name || ""}
         onChange={handleChange}
       />
-      <span className="popup__error-message profile-name-error"></span>
+      <span className="popup__error-message profile-name-error">{errors.name}</span>
       <input
         className="popup__input popup__input_type_status"
         id="profile-job"
@@ -61,7 +61,7 @@ export default function EditProfilePopup(props) {
         value={values.about || ""}
         onChange={handleChange}
       />
-      <span className="popup__error-message profile-job-error"></span>
+      <span className="popup__error-message profile-job-error">{errors.about}</span>
     </PopupWithForm>
   );
 }

@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import PopupWithForm from "./PopupWithForm";
-import useForm from "../hooks/useForm";
+import useFormAndValidation from "../hooks/useForm";
 
 export default function AddPlacePopup(props) {
-  const { values, handleChange, setValues } = useForm({
+  const { values, handleChange, setValues, errors } = useFormAndValidation({
     name: "",
     link: "",
   });
@@ -42,11 +42,10 @@ export default function AddPlacePopup(props) {
         name="name"
         minLength="2"
         maxLength="30"
-        // ref={cardNameRef}
         onChange={handleChange}
         value={values.name}
       />
-      <span className="popup__error-message card-name-error"></span>
+      <span className="popup__error-message card-name-error">{errors.name}</span>
       <input
         className="popup__input popup__input_type_link"
         id="card-url"
@@ -54,11 +53,10 @@ export default function AddPlacePopup(props) {
         placeholder="Ссылка на картинку"
         required
         name="link"
-        // ref={cardLinkRef}
         onChange={handleChange}
         value={values.link}
       />
-      <span className="popup__error-message card-url-error"></span>
+      <span className="popup__error-message card-url-error">{errors.link}</span>
     </PopupWithForm>
   );
 }

@@ -1,8 +1,8 @@
 import React from "react";
-import useForm from "../hooks/useForm";
+import useFormAndValidation from "../hooks/useForm";
 
 const Login = ({ authorizeUser }) => {
-  const { values, handleChange } = useForm({
+  const { values, handleChange, errors } = useFormAndValidation({
     email: "",
     password: "",
   });
@@ -27,7 +27,7 @@ const Login = ({ authorizeUser }) => {
           value={values.email}
           onChange={handleChange}
         />
-        <span className="login__error-message"></span>
+        <span className="login__error-message">{errors.email}</span>
         <input
           className="login__input"
           type="password"
@@ -38,7 +38,7 @@ const Login = ({ authorizeUser }) => {
           value={values.password}
           onChange={handleChange}
         />
-        <span className="login__error-message"></span>
+        <span className="login__error-message">{errors.password}</span>
         <button className="login__save-btn" type="submit">
           Войти
         </button>

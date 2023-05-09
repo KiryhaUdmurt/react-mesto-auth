@@ -1,9 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import useForm from "../hooks/useForm";
+import useFormAndValidation from "../hooks/useForm";
 
 const Register = ({ registerUser, onInfoClick }) => {
-  const { values, handleChange } = useForm({
+  const { values, handleChange, errors } = useFormAndValidation({
     email: "",
     password: "",
   });
@@ -28,7 +29,7 @@ const Register = ({ registerUser, onInfoClick }) => {
           value={values.email}
           onChange={handleChange}
         />
-        <span className="register__error-message"></span>
+        <span className="register__error-message">{errors.email}</span>
         <input
           className="register__input"
           type="password"
@@ -40,7 +41,7 @@ const Register = ({ registerUser, onInfoClick }) => {
           value={values.password}
           onChange={handleChange}
         />
-        <span className="register__error-message"></span>
+        <span className="register__error-message">{errors.password}</span>
         <button
           className="register__save-btn"
           type="submit"
