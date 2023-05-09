@@ -1,25 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import useForm from "../hooks/useForm";
 
-const Login = ({authorizeUser}) => {
-  const {values, handleChange} = useForm({
+const Login = ({ authorizeUser }) => {
+  const { values, handleChange } = useForm({
     email: "",
     password: "",
-  })
-
-  // const [formValue, setFormValue] = useState({
-  //   email: "",
-  //   password: "",
-  // });
-
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-
-  //   setFormValue({
-  //     ...formValue,
-  //     [name]: value,
-  //   });
-  // };
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();

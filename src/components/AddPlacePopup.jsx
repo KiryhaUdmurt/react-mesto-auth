@@ -1,30 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import PopupWithForm from "./PopupWithForm";
+import useForm from "../hooks/useForm";
 
 export default function AddPlacePopup(props) {
-  const [name, setName] = useState("");
-  const [link, setLink] = useState("");
-
-  function handleChangeName(e) {
-    setName(e.target.value);
-  }
-
-  function handleChangeLink(e) {
-    setLink(e.target.value);
-  }
+  const { values, handleChange, setValues } = useForm({
+    name: "",
+    link: "",
+  });
 
   function handleSubmit(e) {
     e.preventDefault();
 
     props.onAddPlace({
-      name,
-      link,
+      name: values.name,
+      link: values.link,
     });
   }
 
   useEffect(() => {
-    setName("");
-    setLink("");
+    setValues({
+      name: "",
+      link: "",
+    });
   }, [props.isOpen]);
 
   return (
@@ -46,8 +43,8 @@ export default function AddPlacePopup(props) {
         minLength="2"
         maxLength="30"
         // ref={cardNameRef}
-        onChange={handleChangeName}
-        value={name}
+        onChange={handleChange}
+        value={values.name}
       />
       <span className="popup__error-message card-name-error"></span>
       <input
@@ -58,8 +55,8 @@ export default function AddPlacePopup(props) {
         required
         name="link"
         // ref={cardLinkRef}
-        onChange={handleChangeLink}
-        value={link}
+        onChange={handleChange}
+        value={values.link}
       />
       <span className="popup__error-message card-url-error"></span>
     </PopupWithForm>
